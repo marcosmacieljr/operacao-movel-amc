@@ -1,3 +1,5 @@
+import 'package:agente_amc/checklist.dart';
+import 'package:agente_amc/inicio.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -8,140 +10,101 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Widget> views = const [
-    Center(
-      child: Text('Dashboard'),
-    ),
-    Center(
-      child: Text('Account'),
-    ),
-    Center(
-      child: Text('Settings'),
-    ),
+  int _selectedIndex = 0;
+  static final List<Widget> _widgetOptions = <Widget>[
+    const Inicio(),
+    const CheckList(),
   ];
-  int selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.amber.shade50,
-      appBar: AppBar(
-        backgroundColor: Colors.amber,
-        foregroundColor: Colors.blueGrey.shade900,
-        title: const Text('AMC - GEOFI'),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: const <Widget>[
-            UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.amber,
-              ),
-              accountEmail: Text("marcosmacieljr@gmail.com"),
-              accountName: Text("Marcos Maciel"),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white54,
-                child: Text("MM"),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.message),
-              title: Text('Comunicados'),
-            ),
-            ExpansionTile(
-              title: Text('Comunicação Interna'),
-              subtitle: Text('Gerencie suas CIs'),
-              children: [
-                ExpansionTile(
-                  title: Text('Cadastrar CIs'),
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.account_circle),
-                      title: Text('Geral'),
+        backgroundColor: Colors.amber.shade50,
+        appBar: AppBar(
+          backgroundColor: Colors.amber,
+          foregroundColor: Colors.blueGrey.shade900,
+          title: const Text(''),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.perm_device_info_rounded),
+              tooltip: 'Sobre o Aplicativo',
+              onPressed: () => showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: SizedBox(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Center(
+                          child: Text('App de Mobilidade Operacional'),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'NUTEC - AMC',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.normal,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        )
+                      ],
                     ),
-                    ListTile(
-                      leading: Icon(Icons.account_circle),
-                      title: Text('Compensação'),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.account_circle),
-                      title: Text('Hora Extra'),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.account_circle),
-                      title: Text('Intercâmbio'),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.account_circle),
-                      title: Text('Mudança de Turno'),
+                  ),
+                  content: const Text(
+                      'Aplicativo desenvolvido pelo Núcleo de Tecnologia da AMC'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'OK'),
+                      child: const Text('OK'),
                     ),
                   ],
                 ),
-                ListTile(
-                  leading: Icon(Icons.account_circle),
-                  title: Text('Pesquisa de CIs'),
+              ),
+            ),
+          ],
+        ),
+        body: _widgetOptions[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.no_crash),
+              label: 'Viatura',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber,
+          onTap: _onItemTapped,
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Container(
+          height: 65.0,
+          width: 65.0,
+          child: FittedBox(
+            child: FloatingActionButton(
+              onPressed: () {},
+              backgroundColor: Colors.white,
+              child: ClipOval(
+                child: SizedBox.fromSize(
+                  size: const Size.fromRadius(26), // Image radius
+                  child: Image.asset(
+                    "images/escudo_amc.png",
+                  ),
                 ),
-              ],
+                // elevation: 5.0,
+              ),
             ),
-            ListTile(
-              leading: Icon(Icons.edit_note),
-              title: Text('Ordem de Serviço'),
-            ),
-            ListTile(
-              leading: Icon(Icons.car_rental),
-              title: Text('Viatura'),
-            ),
-            ListTile(
-              leading: Icon(Icons.receipt),
-              title: Text('Recibo'),
-            ),
-            ListTile(
-              leading: Icon(Icons.schedule),
-              title: Text('Banco de Horas'),
-            ),
-            ListTile(
-              leading: Icon(Icons.currency_exchange),
-              title: Text('Hora Extra'),
-            ),
-            ListTile(
-              leading: Icon(Icons.domain_verification),
-              title: Text('Autorizações'),
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Gerenciar'),
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Sair'),
-            ),
-          ],
-        ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.asset("images/logo_amc.png", width: 300, height: 200),
-            const Text('Bem vindo ao Aplicativo de Serviços AMC - GEOFI'),
-          ],
-        ),
-      ),
-      /* bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.white,
-        backgroundColor: Colors.amber,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.no_crash),
-            label: 'Fazer CheckList',
-          ),
-        ],
-      ), */
-    );
+        ));
   }
 }
